@@ -1,8 +1,8 @@
 #include "get_next_line_bonus.h"
 
-int	ft_strlen_gnl(char *str)
+size_t	ft_strlen(const char *str)
 {
-	int	i;
+	size_t	i;
 
 	i = 0;
 	while (str[i])
@@ -10,45 +10,42 @@ int	ft_strlen_gnl(char *str)
 	return (i);
 }
 
-char	*ft_strchr_gnl(char *vault, char c)
+char	*ft_strchr(const char *s, int c)
 {
-	int	i;
-
-	i = 0;
-	while (vault[i])
+	if (!s)
+		return (NULL);
+	while (*s)
 	{
-		if (vault[i] == c)
-			return (&vault[i]);
-		i++;
+		if (*s == (char)c)
+			return ((char *)s);
+		s++;
 	}
-	if (c == '\0')
-		return (&vault[i]);
+	if ((char)c == '\0')
+		return ((char *)s);
 	return (NULL);
 }
 
-char	*ft_strjoin_gnl(char *line, char *vault)
+char	*ft_strjoin(const char *s1, const char *s2)
 {
-	int		i;
-	int		j;
-	char	*joined_str;
+	size_t	i;
+    size_t  j;
+	char	*joined;
 
-	if (!line)
-	{
-		line = malloc(1);
-		if (!line)
-			return (NULL);
-		line[0] = '\0';
-	}
-	i = -1;
-	j = -1;
-	joined_str = malloc(ft_strlen_gnl(line) + ft_strlen_gnl(vault) + 1);
-	if (!joined_str)
+    i = 0;
+    j = 0;
+	if (!s1 && !s2)
 		return (NULL);
-	while (line[++i])
-		joined_str[i] = line[i];
-	while (vault[++j])
-		joined_str[i + j] = vault[j];
-	joined_str[i + j] = '\0';
-	free(line);
-	return (joined_str);
+	joined = malloc(ft_strlen(s1) + ft_strlen(s2) + 1);
+	if (!joined)
+		return (NULL);
+	while (s1 && s1[i])
+	{
+		joined[i] = s1[i];
+		i++;
+	}
+	while (s2 && s2[j])
+		joined[i++] = s2[j++];
+	joined[i] = '\0';
+	free(s1);
+	return (joined);
 }

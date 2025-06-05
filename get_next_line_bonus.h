@@ -12,9 +12,9 @@
 # include <stdlib.h>
 # include <unistd.h>
 
-int			ft_strlen_gnl(char *str);
-char		*ft_strchr_gnl(char *vault, char c);
-char		*ft_strjoin_gnl(char *line, char *vault);
+char		*ft_strchr(const char *s, int c);
+char		*ft_strjoin(const char *s1, const char *s2);
+size_t		ft_strlen(const char *str);
 char		*get_next_line(int fd);
 
 #endif
