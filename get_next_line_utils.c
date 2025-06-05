@@ -1,8 +1,8 @@
 #include "get_next_line.h"
 
-int	ft_strlen(char *str)
+size_t	ft_strlen(const char *str)
 {
-	int	i;
+	size_t	i;
 
 	i = 0;
 	while (str[i])
@@ -10,50 +10,47 @@ int	ft_strlen(char *str)
 	return (i);
 }
 
-char	*ft_strchr(char *s, char c)
+char	*ft_strchr(const char *s, int c)
 {
-	int	i;
-
-	i = 0;
-	while (s[i])
+	if (!s)
+		return (NULL);
+	while (*s)
 	{
-		if (s[i] == (char)c)
-		{
-			return ((char *)&s[i]);
-		}
-		i++;
+		if (*s == (char)c)
+			return ((char *)s);
+		s++;
 	}
 	if ((char)c == '\0')
-		return ((char *)&s[i]);
-	return (0);
+		return ((char *)s);
+	return (NULL);
 }
 
-char	*ft_strjoin(char *line, char *vault)
+char	*ft_strjoin(const char *s1, const char *s2)
 {
-	int		i;
-	int		j;
-	char	*joined_str;
+	size_t	i;
+    size_t  j;
+	char	*joined;
 
-	if (!line)
-	{
-		line = malloc(1);
-		if (!line)
-			return (NULL);
-		line[0] = '\0';
-	}
-	i = -1;
-	j = -1;
-	joined_str = malloc(ft_strlen(line) + ft_strlen(vault) + 1);
-	if (!joined_str)
+    i = 0;
+    j = 0;
+	if (!s1 && !s2)
 		return (NULL);
-	while (line[++i])
-		joined_str[i] = line[i];
-	while (vault[++j])
-		joined_str[i + j] = vault[j];
-	joined_str[i + j] = '\0';
-	free(line);
-	return (joined_str);
+	joined = malloc(ft_strlen(s1) + ft_strlen(s2) + 1);
+	if (!joined)
+		return (NULL);
+	while (s1 && s1[i])
+	{
+		joined[i] = s1[i];
+		i++;
+	}
+	while (s2 && s2[j])
+		joined[i++] = s2[j++];
+	joined[i] = '\0';
+	free(s1);
+	return (joined);
 }
+
+
 
 /*
 void print_str_or_null(char *str) {
