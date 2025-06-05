@@ -1,97 +1,104 @@
 
 #include "get_next_line.h"
 
-char	*ft_free(char *buffer, char *buf)
+void	ft_remaining(char *vault)
 {
-	char	*temp;
+	int	i;
+	int	j;
 
-	temp = ft_strjoin(buffer, buf);
-	free(buffer);
-	return (temp);
-}
-
-char	*ft_next(char *buffer)
-{
-	int		i;
-	int		j;
-	char	*line;
-
-	i = 0;
-	while (buffer[i] && buffer[i] != '\n')
-		i++;
-	if (!buffer[i])
-	{
-		free(buffer);
-		return (NULL);
-	}
-	line = ft_calloc((ft_strlen(buffer) - i + 1), sizeof(char));
-	i++;
 	j = 0;
-	while (buffer[i])
-		line[j++] = buffer[i++];
-	free(buffer);
-	return (line);
-}
-
-char	*ft_line(char *buffer)
-{
-	char	*line;
-	int		i;
-
 	i = 0;
-	if (!buffer[i])
-		return (NULL);
-	while (buffer[i] && buffer[i] != '\n')
+	while (vault[i] != '\n' && vault[i])
 		i++;
-	line = ft_calloc(i + 2, sizeof(char));
-	i = 0;
-	while (buffer[i] && buffer[i] != '\n')
+	if (vault[i] == '\n')
+		i++;
+	while (vault[i] != '\0')
 	{
-		line[i] = buffer[i];
+		vault[j] = vault[i];
+		j++;
 		i++;
 	}
-	if (buffer[i] && buffer[i] == '\n')
-		line[i++] = '\n';
-	return (line);
+	while (j < BUFFER_SIZE)
+	{
+		vault[j] = '\0';
+		j++;
+	}
 }
 
-char	*read_file(int fd, char *res)
+char	*ft_read_and_store(int fd, char *line, char *vault)
 {
-	char	*buffer;
-	int		byte_read;
+	char	*new_line;
+	int		bytes_read;
 
-	if (!res)
-		res = ft_calloc(1, 1);
-	buffer = ft_calloc(BUFFER_SIZE + 1, sizeof(char));
-	byte_read = 1;
-	while (byte_read > 0)
+	new_line = line;
+	ft_remaining(vault);
+	while (1)
 	{
-		byte_read = read(fd, buffer, BUFFER_SIZE);
-		if (byte_read == -1)
+		bytes_read = read(fd, vault, BUFFER_SIZE);
+		if (bytes_read < 0)
 		{
-			free(buffer);
+			if (line)
+				free(line);
+			ft_remaining(vault);
 			return (NULL);
 		}
-		buffer[byte_read] = 0;
-		res = ft_free(res, buffer);
-		if (ft_strchr(buffer, '\n'))
+		if (bytes_read == 0)
 			break ;
+		new_line = ft_strjoin_gnl(new_line, vault);
+		if (!new_line)
+			return (NULL);
+		if (ft_strchr_gnl(vault, '\n'))
+			break ;
+		ft_remaining(vault);
 	}
-	free(buffer);
-	return (res);
+	return (new_line);
+}
+
+char	*ft_extract_line(char *vault, char *line)
+{
+	int	i;
+
+	i = 0;
+	if (!line)
+	{
+		line = malloc(1);
+		if (!line)
+			return (NULL);
+		line[0] = '\0';
+	}
+	line = ft_strjoin_gnl(line, vault);
+	while (line[i] != '\n' && line[i])
+		i++;
+	if (line[i] != '\0')
+		line[i + 1] = '\0';
+	ft_remaining(vault);
+	return (line);
 }
 
 char	*get_next_line(int fd)
 {
-	static char	*buffer;
+	static char	vault[BUFFER_SIZE + 1];
 	char		*line;
 
-	if (fd < 0 || BUFFER_SIZE <= 0 || read(fd, 0, 0) < 0)
+	line = NULL;
+	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
-	buffer = read_file(fd, buffer);
-	if (!buffer)
+	if (vault[0] && ft_strchr_gnl(vault, '\n'))
+		return (ft_extract_line(vault, line));
+	if (vault[0])
+	{
+		line = ft_strjoin_gnl(line, vault);
+		if (!line)
+			return (NULL);
+	}
+	line = ft_read_and_store(fd, line, vault);
+	if (!line)
 		return (NULL);
-	line = ft_line(buffer);
-	buffer = ft_next(buffer);
+	line = ft_extract_line(vault, line);
+	if (!line)
+		return (NULL);
 	return (line);
 }
+
+
+
