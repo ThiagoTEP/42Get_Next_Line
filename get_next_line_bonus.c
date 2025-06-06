@@ -1,6 +1,6 @@
 #include "get_next_line_bonus.h"
 
-void	ft_residual(char *buf)
+static void	ft_residual(char *buf)
 {
 	int	i;
 	int	j;
@@ -13,17 +13,14 @@ void	ft_residual(char *buf)
 		i++;
 	while (buf[i])
 		buf[j++] = buf[i++];
-	while (j < BUFFER_SIZE)
+	while (j <= BUFFER_SIZE)
 		buf[j++] = '\0';
 }
 
-char	*ft_readloop(int fd, char *line, char *buf)
+static char	*ft_readloop(int fd, char *line, char *buf)
 {
-	char	*new_line;
 	int		bytes_read;
 
-	new_line = line;
-	ft_residual(buf);
 	while (1)
 	{
 		bytes_read = read(fd, buf, BUFFER_SIZE);
@@ -31,38 +28,31 @@ char	*ft_readloop(int fd, char *line, char *buf)
 		{
 			if (line)
 				free(line);
-			ft_residual(buf);
 			return (NULL);
 		}
-		if (bytes_read == 0)
-			break ;
-		new_line = ft_strjoin(new_line, buf);
-		if (!new_line)
+		buf[bytes_read] = '\0';
+		line = ft_strjoin(line, buf);
+		if (!line)
 			return (NULL);
 		if (ft_strchr(buf, '\n'))
 			break ;
-		ft_residual(buf);
 	}
-	return (new_line);
+	return (line);
 }
 
-char	*ft_loadline(char *buf, char *line)
+static char	*ft_loadline(char *buf, char *line)
 {
 	int	i;
 
 	i = 0;
-	if (!line)
-	{
-		line = malloc(1);
-		if (!line)
-			return (NULL);
-		line[0] = '\0';
-	}
 	line = ft_strjoin(line, buf);
-	while (line[i] != '\n' && line[i])
+	if (!line)
+		return (NULL);
+	while (line[i] && line[i] != '\n')
 		i++;
 	if (line[i] == '\n')
-    	line[i + 1] = '\0';
+    	i++;
+	line[i] = '\0',
 	ft_residual(buf);
 	return (line);
 }
@@ -72,12 +62,14 @@ char	*get_next_line(int fd)
 	static char	buf[MAX_FD_SIZE][BUFFER_SIZE + 1];
 	char		*line;
 
-	line = NULL;
 	if (fd < 0 || BUFFER_SIZE <= 0)
+		return (NULL);
+	line = malloc(1);
+	if (!line)
 		return (NULL);
 	if (buf[fd][0] && ft_strchr(buf[fd], '\n'))
 		return (ft_loadline(buf[fd], line));
-	if (buf[fd][0])
+	else if (buf[fd][0])
 	{
 		line = ft_strjoin_gnl(line, buf[fd]);
 		if (!line)
@@ -86,8 +78,5 @@ char	*get_next_line(int fd)
 	line = ft_readloop(fd, line, buf[fd]);
 	if (!line)
 		return (NULL);
-	line = ft_loadline(buf[fd], line);
-	if (!line)
-		return (NULL);
-	return (line);
+	return (ft_loadline(buf[fd], line));
 }

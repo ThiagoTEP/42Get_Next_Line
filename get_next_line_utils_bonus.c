@@ -25,20 +25,33 @@ char	*ft_strchr(const char *s, int c)
 	return (NULL);
 }
 
-char	*ft_strjoin(const char *s1, const char *s2)
+static char *init_s1(char *s1)
 {
-	size_t	i;
-    size_t  j;
+	if (!s1)
+	{
+		s1 = malloc(1);
+		if (!s1)
+			return NULL;
+		s1[0] = '\0';
+	}
+	return s1;
+}
+
+char *ft_strjoin(char *s1, const char *s2)
+{
+	size_t	i = 0, j = 0;
 	char	*joined;
 
-    i = 0;
-    j = 0;
-	if (!s1 && !s2)
-		return (NULL);
+	s1 = init_s1(s1);
+	if (!s1)
+		return NULL;
 	joined = malloc(ft_strlen(s1) + ft_strlen(s2) + 1);
 	if (!joined)
-		return (NULL);
-	while (s1 && s1[i])
+	{
+		free(s1);
+		return NULL;
+	}
+	while (s1[i])
 	{
 		joined[i] = s1[i];
 		i++;
@@ -47,5 +60,5 @@ char	*ft_strjoin(const char *s1, const char *s2)
 		joined[i++] = s2[j++];
 	joined[i] = '\0';
 	free(s1);
-	return (joined);
+	return joined;
 }
