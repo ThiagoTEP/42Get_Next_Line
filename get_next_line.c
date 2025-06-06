@@ -14,13 +14,14 @@ static void	ft_residual(char *buf)
 		i++;
 	while (buf[i])
 		buf[j++] = buf[i++];
-	while (j <= BUFFER_SIZE)
+	while (j < BUFFER_SIZE + 1)
 		buf[j++] = '\0';
 }
 
 static char	*ft_readloop(int fd, char *line, char *buf)
 {
 	int		bytes_read;
+	char	*temp_line;
 
 	while (1)
 	{
@@ -32,9 +33,13 @@ static char	*ft_readloop(int fd, char *line, char *buf)
 			return (NULL);
 		}
 		buf[bytes_read] = '\0';
-		line = ft_strjoin(line, buf);
-		if (!line)
+		temp_line = ft_strjoin(line, buf);
+		if (!temp_line)
+		{	
+			free(line);
 			return (NULL);
+		}
+		line = temp_line;
 		if (ft_strchr(buf, '\n'))
 			break ;
 	}
@@ -68,13 +73,17 @@ char	*get_next_line(int fd)
 	line = malloc(1);
 	if (!line)
 		return (NULL);
+	line[0] = '\0';
 	if (buf[0] && ft_strchr(buf, '\n'))
 		return (ft_loadline(buf, line));
 	else if (buf[0])
 	{
 		line = ft_strjoin(line, buf);
 		if (!line)
+		{
+			free(line);
 			return (NULL);
+		}
 	}
 	line = ft_readloop(fd, line, buf);
 	if (!line)
