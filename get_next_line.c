@@ -49,7 +49,7 @@ static char	*ft_readloop(int fd, char *line, char *buf)
 static char	*ft_loadline(char *buf, char *line)
 {
 	int	i;
-
+	
 	i = 0;
 	line = ft_strjoin(line, buf);
 	if (!line)
@@ -57,11 +57,14 @@ static char	*ft_loadline(char *buf, char *line)
 	while (line[i] && line[i] != '\n')
 		i++;
 	if (line[i] == '\n')
+	{
     	i++;
-	line[i] = '\0',
+		line[i] = '\0';
+	}
 	ft_residual(buf);
 	return (line);
 }
+
 
 char	*get_next_line(int fd)
 {
@@ -80,14 +83,15 @@ char	*get_next_line(int fd)
 	{
 		line = ft_strjoin(line, buf);
 		if (!line)
-		{
-			free(line);
 			return (NULL);
-		}
 	}
 	line = ft_readloop(fd, line, buf);
-	if (!line || line[0] == '\0')
+	if (!line ||line[0] == '\0')
+	{
+		free(line);
+		buf[0] = '\0';
 		return (NULL);
+	}
 	return (ft_loadline(buf, line));
 }
 

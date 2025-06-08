@@ -31,7 +31,6 @@ static char *init_s1(char *s1)
 	{
 		s1 = malloc(1);
 		if (!s1)
-			free(s1);
 			return NULL;
 		s1[0] = '\0';
 	}
@@ -49,7 +48,7 @@ char *ft_strjoin(char *s1, const char *s2)
 	joined = malloc(ft_strlen(s1) + ft_strlen(s2) + 1);
 	if (!joined)
 	{
-		free(s1);
+		//free(s1);
 		return NULL;
 	}
 	while (s1[i])
