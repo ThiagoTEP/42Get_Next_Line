@@ -40,7 +40,7 @@ static char	*ft_readloop(int fd, char *line, char *buf)
 			return (NULL);
 		}
 		line = temp_line;
-		if (ft_strchr(buf, '\n') || bytes_read == 0)
+		if (ft_strchr(buf, '\n') || ft_strchr(buf, '\0'))
 			break ;
 	}
 	return (line);
@@ -86,7 +86,7 @@ char	*get_next_line(int fd)
 		}
 	}
 	line = ft_readloop(fd, line, buf);
-	if (!line || line[0] == '\0')
+	if (!line)
 		return (NULL);
 	return (ft_loadline(buf, line));
 }
