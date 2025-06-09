@@ -10,7 +10,7 @@ int main(void)
 
 	char *line1;
 	char *line2;
-	char *line3; //efeito de teste para git commit
+	
 
 	if (fd1 < 0 || fd2 < 0)
 		return 1;
@@ -40,5 +40,3 @@ int main(void)
 
 	return 0;
 }
-
-/*fazer uma alteracao para verificacao de commits*/
