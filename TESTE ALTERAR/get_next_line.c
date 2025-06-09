@@ -32,7 +32,7 @@ static char	*ft_readloop(int fd, char *line, char *buf)
 		}
 		buf[bytes_read] = '\0';
 		temp_line = ft_strjoin(line, buf);
-		free(line); // ✅ sempre liberar a antiga
+		free(line);
 		if (!temp_line)
 			return (NULL);
 		line = temp_line;
@@ -94,7 +94,7 @@ char	*ft_process_buffer(char *buf, char *line, char **out)
 	{
 		tmp = ft_loadline(buf, line);
 		*out = tmp;
-		return (NULL); // line já foi free em ft_loadline, sinaliza com NULL para o chamador
+		return (NULL);
 	}
 	else if (buf[0])
 	{
@@ -117,7 +117,7 @@ char	*get_next_line(int fd)
 
 	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
-	line = (char *)malloc(1);
+	line = malloc(1);
 	if (!line)
 		return (NULL);
 	line[0] = '\0';
