@@ -42,54 +42,59 @@ static char	*ft_readloop(int fd, char *line, char *buf)
 	return (line);
 }
 
-static char	*ft_loadline(char *buf, char *line)
+static char	*ft_extract_line(char *joined)
 {
 	int		i = 0;
 	int		j = 0;
-	char	*joined;
 	char	*final_line;
 
-	joined = ft_strjoin(line, buf);
-	free(line); // ✅ libera o line original
-	if (!joined)
-		return (NULL);
 	while (joined[i] && joined[i] != '\n')
 		i++;
 	if (joined[i] == '\n')
 		i++;
 	final_line = (char *)malloc(i + 1);
 	if (!final_line)
-	{
-		free(joined);
 		return (NULL);
-	}
 	while (j < i)
 	{
 		final_line[j] = joined[j];
 		j++;
 	}
 	final_line[j] = '\0';
-	free(joined); // ✅ libera a string concatenada
+	return (final_line);
+}
+
+static char	*ft_loadline(char *buf, char *line)
+{
+	char	*joined;
+	char	*final_line;
+
+	joined = ft_strjoin(line, buf);
+	free(line);
+	if (!joined)
+		return (NULL);
+	final_line = ft_extract_line(joined);
+	if (!final_line)
+	{
+		free(joined);
+		return (NULL);
+	}
+	free(joined);
 	ft_residual(buf);
 	return (final_line);
 }
 
-char	*get_next_line(int fd)
-{
-	static char	buf[BUFFER_SIZE + 1];
-	char		*line;
-	char		*tmp;
 
-	if (fd < 0 || BUFFER_SIZE <= 0)
-		return (NULL);
-	line = (char *)malloc(1);
-	if (!line)
-		return (NULL);
-	line[0] = '\0';
+char	*ft_process_buffer(char *buf, char *line, char **out)
+{
+	char	*tmp;
+
+	*out = NULL;
 	if (buf[0] && ft_strchr(buf, '\n'))
 	{
 		tmp = ft_loadline(buf, line);
-		return (tmp); // line já foi free() em ft_loadline
+		*out = tmp;
+		return (NULL); // line já foi free em ft_loadline, sinaliza com NULL para o chamador
 	}
 	else if (buf[0])
 	{
@@ -97,9 +102,31 @@ char	*get_next_line(int fd)
 		free(line);
 		if (!tmp)
 			return (NULL);
-		line = tmp;
 		buf[0] = '\0';
+		return (tmp);
 	}
+	return (line);
+}
+
+char	*get_next_line(int fd)
+{
+	static char	buf[BUFFER_SIZE + 1];
+	char		*line;
+	char		*tmp;
+	char		*ret;
+
+	if (fd < 0 || BUFFER_SIZE <= 0)
+		return (NULL);
+	line = (char *)malloc(1);
+	if (!line)
+		return (NULL);
+	line[0] = '\0';
+	tmp = ft_process_buffer(buf, line, &ret);
+	if (ret)
+		return (ret);
+	if (!tmp)
+		return (NULL);
+	line = tmp;
 	line = ft_readloop(fd, line, buf);
 	if (!line || line[0] == '\0')
 	{
@@ -108,4 +135,5 @@ char	*get_next_line(int fd)
 	}
 	return (ft_loadline(buf, line));
 }
+
 

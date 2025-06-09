@@ -28,17 +28,14 @@ static char	*ft_readloop(int fd, char *line, char *buf)
 		bytes_read = read(fd, buf, BUFFER_SIZE);
 		if (bytes_read < 0)
 		{
-			if (line)
-				free(line);
+			free(line);
 			return (NULL);
 		}
 		buf[bytes_read] = '\0';
 		temp_line = ft_strjoin(line, buf);
-		if (!temp_line)
-		{	
-			free(line);
+		free(line);
+		if (!temp_line)	
 			return (NULL);
-		}
 		line = temp_line;
 		if (ft_strchr(buf, '\n') || bytes_read == 0)
 			break ;
@@ -84,12 +81,12 @@ char	*get_next_line(int fd)
 		line = ft_strjoin(line, buf);
 		if (!line)
 			return (NULL);
+		buf[0] = '\0';
 	}
 	line = ft_readloop(fd, line, buf);
 	if (!line ||line[0] == '\0')
 	{
 		free(line);
-		buf[0] = '\0';
 		return (NULL);
 	}
 	return (ft_loadline(buf, line));

@@ -1,6 +1,7 @@
 {
     "files.associations": {
-        "cstdlib": "c",
-        "get_next_line.h": "c"
-    }
+		"cstdlib": "c",
+		"get_next_line.h": "c",
+		"unistd.h": "c"
+	}
 }
