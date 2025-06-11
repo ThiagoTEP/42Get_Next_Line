@@ -6,16 +6,33 @@
 /*   By: thevaris <thevaris@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/09 15:29:09 by thevaris          #+#    #+#             */
-/*   Updated: 2025/06/09 15:29:12 by thevaris         ###   ########.fr       */
+/*   Updated: 2025/06/11 09:21:13 by thevaris         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
+void	ft_residual(char *buf)
+{
+	int	i;
+	int	j;
+
+	i = 0;
+	j = 0;
+	while (buf[i] && buf[i] != '\n')
+		i++;
+	if (buf[i] == '\n')
+		i++;
+	while (buf[i])
+		buf[j++] = buf[i++];
+	while (j < BUFFER_SIZE + 1)
+		buf[j++] = '\0';
+}
+
 size_t	ft_strlen(const char *s)
 {
 	size_t	len;
-	
+
 	len = 0;
 	while (s && s[len])
 		len++;
@@ -41,7 +58,7 @@ char	*ft_strjoin(char *s1, char *s2)
 {
 	char	*joined;
 	size_t	i;
-	size_t	j; 
+	size_t	j;
 
 	i = 0;
 	j = 0;
@@ -58,4 +75,3 @@ char	*ft_strjoin(char *s1, char *s2)
 	joined[i] = '\0';
 	return (joined);
 }
-

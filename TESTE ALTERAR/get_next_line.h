@@ -6,7 +6,7 @@
 /*   By: thevaris <thevaris@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/09 15:28:55 by thevaris          #+#    #+#             */
-/*   Updated: 2025/06/09 15:28:58 by thevaris         ###   ########.fr       */
+/*   Updated: 2025/06/11 09:21:29 by thevaris         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,10 +20,10 @@
 # include <stdlib.h>
 # include <unistd.h>
 
+void	ft_residual(char *buf);
 char	*get_next_line(int fd);
 char	*ft_strjoin(char *s1, char *s2);
 char	*ft_strchr(const char *s, int c);
 size_t	ft_strlen(const char *s);
 
 #endif
-

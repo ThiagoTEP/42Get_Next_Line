@@ -6,28 +6,11 @@
 /*   By: thevaris <thevaris@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/09 15:28:28 by thevaris          #+#    #+#             */
-/*   Updated: 2025/06/09 15:28:31 by thevaris         ###   ########.fr       */
+/*   Updated: 2025/06/11 11:17:08 by thevaris         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
-
-static void	ft_residual(char *buf)
-{
-	int	i;
-	int	j;
-
-	i = 0;
-	j = 0;
-	while (buf[i] && buf[i] != '\n')
-		i++;
-	if (buf[i] == '\n')
-		i++;
-	while (buf[i])
-		buf[j++] = buf[i++];
-	while (j < BUFFER_SIZE + 1)
-		buf[j++] = '\0';
-}
 
 static char	*ft_readloop(int fd, char *line, char *buf)
 {
@@ -56,10 +39,12 @@ static char	*ft_readloop(int fd, char *line, char *buf)
 
 static char	*ft_extract_line(char *joined)
 {
-	int		i = 0;
-	int		j = 0;
+	int		i;
+	int		j;
 	char	*final_line;
 
+	i = 0;
+	j = 0;
 	while (joined[i] && joined[i] != '\n')
 		i++;
 	if (joined[i] == '\n')
@@ -95,7 +80,6 @@ static char	*ft_loadline(char *buf, char *line)
 	ft_residual(buf);
 	return (final_line);
 }
-
 
 char	*ft_process_buffer(char *buf, char *line, char **out)
 {
@@ -147,5 +131,3 @@ char	*get_next_line(int fd)
 	}
 	return (ft_loadline(buf, line));
 }
-
-
