@@ -25,7 +25,8 @@ int main(void)
     contastatic();
     contastatic();
     contastatic();
-    
+	contastatic();
+	// so para testar os commits
     
     return 0;
 }
