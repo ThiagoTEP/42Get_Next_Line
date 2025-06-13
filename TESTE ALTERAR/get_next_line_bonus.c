@@ -6,7 +6,7 @@
 /*   By: thevaris <thevaris@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/11 11:29:19 by thevaris          #+#    #+#             */
-/*   Updated: 2025/06/11 12:12:32 by thevaris         ###   ########.fr       */
+/*   Updated: 2025/06/11 15:05:35 by thevaris         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,15 +104,23 @@ char	*ft_process_buffer(char *buf, char *line, char **out)
 	return (line);
 }
 
+
 char	*get_next_line(int fd)
 {
-	static char	buf[MAX_FD_SIZE][BUFFER_SIZE + 1];
+	static char	*buf[MAX_FD_SIZE];
 	char		*line;
 	char		*tmp;
 	char		*ret;
 
 	if (fd < 0 || fd >= MAX_FD_SIZE || BUFFER_SIZE <= 0)
 		return (NULL);
+	if (!buf[fd])
+	{
+		buf[fd] = malloc(BUFFER_SIZE + 1);
+		if (!buf[fd])
+			return (NULL);
+		buf[fd][0] = '\0';
+	}
 	line = malloc(1);
 	if (!line)
 		return (NULL);
@@ -124,10 +132,20 @@ char	*get_next_line(int fd)
 		return (NULL);
 	line = tmp;
 	line = ft_readloop(fd, line, buf[fd]);
-	if (!line || line[0] == '\0')
+	if (!line)
+		return (NULL);
+	if (line[0] == '\0')
 	{
 		free(line);
+		free(buf[fd]);
+		buf[fd] = NULL;
 		return (NULL);
 	}
-	return (ft_loadline(buf[fd], line));
+	ret = ft_loadline(buf[fd], line);
+	if (!ret)
+	{
+		free(buf[fd]);
+		buf[fd] = NULL;
+	}
+	return (ret);
 }

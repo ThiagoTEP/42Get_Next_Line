@@ -6,7 +6,7 @@
 /*   By: thevaris <thevaris@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/11 11:32:26 by thevaris          #+#    #+#             */
-/*   Updated: 2025/06/11 11:58:26 by thevaris         ###   ########.fr       */
+/*   Updated: 2025/06/11 15:08:13 by thevaris         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,9 +17,9 @@
 #  define BUFFER_SIZE 42
 # endif
 
-# ifndef MAX_FD_SIZE 
+
 #  define MAX_FD_SIZE 1024
-# endif
+
 
 # include <stdlib.h>
 # include <unistd.h>
